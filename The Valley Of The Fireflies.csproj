@@ -78,14 +78,46 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Abstract\Bases\Controller.cs" />
+    <Compile Include="Assets\Scripts\Abstract\Bases\ModelController.cs" />
+    <Compile Include="Assets\Scripts\Abstract\Bases\ModelView.cs" />
+    <Compile Include="Assets\Scripts\Abstract\Bases\View.cs" />
+    <Compile Include="Assets\Scripts\Abstract\Interfaces\IController.cs" />
+    <Compile Include="Assets\Scripts\Abstract\Interfaces\IControllerModelView.cs" />
+    <Compile Include="Assets\Scripts\Abstract\Interfaces\IModelView.cs" />
+    <Compile Include="Assets\Scripts\Abstract\Interfaces\IView.cs" />
+    <Compile Include="Assets\Scripts\Bar.cs" />
+    <Compile Include="Assets\Scripts\CameraControl.cs" />
+    <Compile Include="Assets\Scripts\FlyingText.cs" />
     <Compile Include="Assets\Scripts\GameStarter.cs" />
+    <Compile Include="Assets\Scripts\Gold Manager\GoldManagerController.cs" />
+    <Compile Include="Assets\Scripts\Gold Manager\GoldManagerView.cs" />
+    <Compile Include="Assets\Scripts\Monster Spawner\MonsterSpawnerController.cs" />
+    <Compile Include="Assets\Scripts\Monster Spawner\MonsterSpawnerView.cs" />
     <Compile Include="Assets\Scripts\Monster\MonsterController.cs" />
     <Compile Include="Assets\Scripts\Monster\MonsterView.cs" />
     <Compile Include="Assets\Scripts\Monster\MonsterViewModel.cs" />
+    <Compile Include="Assets\Scripts\ObjectDisabler.cs" />
     <Compile Include="Assets\Scripts\PathFollower.cs" />
-    <Compile Include="Assets\Scripts\Spawner\SpawnerController.cs" />
-    <Compile Include="Assets\Scripts\Spawner\SpawnerView.cs" />
+    <Compile Include="Assets\Scripts\PrefabAttacher.cs" />
+    <Compile Include="Assets\Scripts\Projectile\ProjectileController.cs" />
+    <Compile Include="Assets\Scripts\Projectile\ProjectileView.cs" />
+    <Compile Include="Assets\Scripts\ScaleRelativeToCamera.cs" />
+    <Compile Include="Assets\Scripts\TargetFollower.cs" />
+    <Compile Include="Assets\Scripts\TowardsCameraRotator.cs" />
+    <Compile Include="Assets\Scripts\Tower Selector\TowerSelectorController.cs" />
+    <Compile Include="Assets\Scripts\Tower Selector\TowerSelectorView.cs" />
+    <Compile Include="Assets\Scripts\Tower Spawner\TowerSpawnerController.cs" />
+    <Compile Include="Assets\Scripts\Tower Spawner\TowerSpawnerView.cs" />
+    <Compile Include="Assets\Scripts\Tower\TowerController.cs" />
+    <Compile Include="Assets\Scripts\Tower\TowerView.cs" />
+    <Compile Include="Assets\Scripts\Tower\TowerViewModel.cs" />
     <Compile Include="Assets\Scripts\Utils\Cooldown.cs" />
+    <Compile Include="Assets\Scripts\Utils\FlyingTextSpawner.cs" />
+    <Compile Include="Assets\Scripts\Utils\MonsterFactory.cs" />
+    <Compile Include="Assets\Scripts\Utils\ProjectileFactory.cs" />
+    <Compile Include="Assets\Scripts\Utils\TowerFactory.cs" />
+    <Compile Include="Assets\Scripts\Utils\Utils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using ElementalTowerDefenseModel;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PathFollower : MonoBehaviour {
 
+    private const float AIR_OFFSET = 3;
     private const float POINT_REACH_RADIUS = 0.1f;
 
     public GameObject path;
@@ -14,7 +16,7 @@ public class PathFollower : MonoBehaviour {
     private int currentPathPoint = 0;
     
 	void Start () {
-        ExtractPointsFromPath();
+
 	}
 	
 	void Update () {
@@ -39,12 +41,15 @@ public class PathFollower : MonoBehaviour {
         transform.rotation = Quaternion.Slerp(transform.rotation, lookDirection, rotationSpeed * Time.deltaTime);
     }
 
-    private void ExtractPointsFromPath()
+    public void ExtractPointsFromPath(TerrainType terrainType)
     {
         List<Vector3> result = new List<Vector3>();
         foreach (Transform child in path.transform)
         {
-            result.Add(child.position);
+            Vector3 position = child.position;
+            if (terrainType == TerrainType.AIR) position += new Vector3(0, AIR_OFFSET, 0);
+
+            result.Add(position);
         }
         pathPoints = result.ToArray();
     }
