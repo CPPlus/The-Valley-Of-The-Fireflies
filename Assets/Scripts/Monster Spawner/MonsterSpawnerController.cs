@@ -16,14 +16,14 @@ public class MonsterSpawnerController : Controller<MonsterSpawnerView> {
 
     private GoldManagerController goldManagerController;
 
-	public MonsterSpawnerController(MonsterSpawnerView view, GoldManagerController goldManagerController) : base(view)
+	public MonsterSpawnerController(MonsterSpawnerView view, GoldManagerController goldManagerController, WaveService waveService) : base(view)
     {
         this.goldManagerController = goldManagerController;
 
         wavesData = new LevelOneWavesData();
         monsterSpawnCooldown = new Cooldown(WavesData.MONSTER_SPAWN_INTERVAL);
         waveSpawnCooldown = new Cooldown(WavesData.WAVE_SPAWN_INTERVAL);
-        waveService = new WaveService(goldManagerController.Model);
+        this.waveService = waveService;
 	}
 
     public void Update(float deltaTime)

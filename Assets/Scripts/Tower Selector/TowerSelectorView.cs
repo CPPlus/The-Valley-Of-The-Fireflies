@@ -23,18 +23,23 @@ public class TowerSelectorView : ModelView<TowerSelectorController> , IModelView
         shootingRangeSphere.SetActive(isVisible);   
     }
 
-    public void UpdateState(TowerType type)
+    public void UpdateState(TowerSelectorViewModel data)
     {
         if (towerProjection != null) Destroy(towerProjection);
-        TowerController controller = TowerFactory.CreateTower(type, ElementalTowerDefenseModel.TowerFactory.CreateTower(type), null);
-        towerProjection = controller.View.gameObject;
+        Tower model = ElementalTowerDefenseModel.TowerFactory.CreateTower(data.TowerType);
+        TowerController controller 
+            = TowerFactory.CreateTower(
+                data.TowerType, 
+                model, 
+                null,
+                out towerProjection);
         towerProjection.GetComponent<Rigidbody>().detectCollisions = false;
         towerProjection.GetComponent<TowerView>().enabled = false;
         towerProjection.transform.parent = gameObject.transform;
         transform.GetChild(0).transform.localScale = new Vector3(
-            controller.Model.Range.Points * 2,
-            controller.Model.Range.Points * 2,
-            controller.Model.Range.Points * 2);
+            model.Range.Points * 2,
+            model.Range.Points * 2,
+            model.Range.Points * 2);
         spawnerView.IsInSpawnMode = true;
     }
 

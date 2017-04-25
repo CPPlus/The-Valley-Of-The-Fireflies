@@ -15,27 +15,4 @@ public class MonsterSpawnerView : View<MonsterSpawnerController>, IView {
 	void Update () {
 		
 	}
-
-    public void SpawnMonsterView(MonsterController controller, MonsterType type)
-    {
-        GameObject prefab = null;
-        switch (type)
-        {
-            case MonsterType.CRAWLING_HORROR:
-                prefab = crawlingHorrorPrefab;
-                break;
-            case MonsterType.RUNNER:
-                prefab = runnerPrefab;
-                break;
-        }
-
-        GameObject monster = Instantiate(prefab, transform.position, transform.rotation);
-        MonsterView view = monster.GetComponent<MonsterView>();
-
-        PathFollower follower = view.gameObject.GetComponent<PathFollower>();
-        follower.path = GameObject.FindGameObjectWithTag("Path");
-
-        controller.View = view;
-        view.Controller = controller;
-    }
 }

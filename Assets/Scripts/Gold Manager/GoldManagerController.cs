@@ -10,6 +10,13 @@ public class GoldManagerController : ModelController<GoldManager, GoldManagerVie
     {
     }
 
+    public bool CanSpend(TowerType towerType)
+    {
+        return Model.CanSpend(
+                Model.PriceList.GetPrice(
+                    towerType));
+    }
+
     public override void UpdateView()
     {
         View.UpdateState(Model.Gold);

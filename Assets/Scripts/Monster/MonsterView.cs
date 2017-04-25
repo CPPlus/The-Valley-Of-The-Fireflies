@@ -20,6 +20,11 @@ public class MonsterView : ModelView<MonsterController> {
 		
 	}
 
+    public void OnShot(Projectile projectile)
+    {
+        Controller.OnShot(projectile);
+    }
+
     public void UpdateState(MonsterViewModel viewModel)
     {
         if (follower == null) follower = GetComponent<PathFollower>();

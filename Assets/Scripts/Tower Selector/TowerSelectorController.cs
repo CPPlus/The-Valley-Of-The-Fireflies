@@ -10,14 +10,26 @@ public class TowerSelectorController : ModelController<TowerSelector, TowerSelec
 
     }
 
-    public void SelectTowerType(TowerType towerType)
+    public TowerType SelectedTowerType
     {
-        Model.Select(towerType);
-        UpdateView();
+        get
+        {
+            return Model.SelectedTowerType;
+        }
+
+        set
+        {
+            Model.Select(value);
+            UpdateView();
+        }
     }
 
     public override void UpdateView()
     {
-        View.UpdateState(Model.SelectedTowerType);
+        View.UpdateState(
+            new TowerSelectorViewModel
+            {
+                TowerType = Model.SelectedTowerType
+            });
     }
 }

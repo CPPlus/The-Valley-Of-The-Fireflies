@@ -16,9 +16,7 @@ public class TowerSpawnerController : Controller<TowerSpawnerView> {
     {
         get
         {
-            return goldManagerController.Model.CanSpend(
-                goldManagerController.Model.PriceList.GetPrice(
-                    towerSelectorController.Model.SelectedTowerType));
+            return goldManagerController.CanSpend(towerSelectorController.SelectedTowerType);
         }
     }
 
@@ -36,8 +34,7 @@ public class TowerSpawnerController : Controller<TowerSpawnerView> {
             Tower tower = towerService.Buy();
             if (tower != null)
             {
-                TowerController controller = TowerFactory.CreateTower(towerSelectorController.Model.SelectedTowerType, tower, this);
-                controller.View.Controller = controller;
+                TowerController controller = TowerFactory.CreateTower(towerSelectorController.SelectedTowerType, tower, this);
                 goldManagerController.UpdateView();
                 controllers.Add(controller);
                 View.IsInSpawnMode = false;

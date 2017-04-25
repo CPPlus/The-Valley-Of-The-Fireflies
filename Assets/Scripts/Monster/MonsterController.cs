@@ -10,6 +10,12 @@ public class MonsterController : ModelController<Monster, MonsterView> {
 
     }
 
+    public void OnShot(Projectile projectile)
+    {
+        Model.GetShot(projectile);
+        UpdateView();
+    }
+
     public override void UpdateView()
     {
         MonsterViewModel viewModel = new MonsterViewModel();

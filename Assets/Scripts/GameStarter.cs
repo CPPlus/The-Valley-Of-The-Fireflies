@@ -21,12 +21,12 @@ public class GameStarter : MonoBehaviour {
         GoldManager goldManager = new GoldManager(150, new RegularPriceList());
         goldManagerController = new GoldManagerController(goldManager, goldManagerView);
 
-        spawnerController = new MonsterSpawnerController(spawnerView, goldManagerController);
-        spawnerController.View = spawnerView;
+        WaveService waveService = new WaveService(goldManager);
+        spawnerController = new MonsterSpawnerController(spawnerView, goldManagerController, waveService);
 
         towerSelectorController = new TowerSelectorController(new TowerSelector(), towerSelectorView);
         towerSelectorView.Controller = towerSelectorController;
-        towerSelectorController.SelectTowerType(TowerType.EARTH_TOWER);
+        towerSelectorController.SelectedTowerType = TowerType.EARTH_TOWER;
 
         towerSpawnerController = new TowerSpawnerController(towerSpawnerView, towerSelectorController, goldManagerController);
         towerSpawnerView.Controller = towerSpawnerController;
@@ -42,8 +42,8 @@ public class GameStarter : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.K)) spawnerController.KillWave();
         if (Input.GetKeyDown(KeyCode.R)) towerSpawnerController.ReloadAll();
-        if (Input.GetKeyDown(KeyCode.Alpha1)) towerSelectorController.SelectTowerType(TowerType.EARTH_TOWER);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) towerSelectorController.SelectTowerType(TowerType.FIRE_TOWER);
+        if (Input.GetKeyDown(KeyCode.Alpha1)) towerSelectorController.SelectedTowerType = TowerType.EARTH_TOWER;
+        if (Input.GetKeyDown(KeyCode.Alpha2)) towerSelectorController.SelectedTowerType = TowerType.FIRE_TOWER;
         if (Input.GetKeyDown(KeyCode.Mouse0)) towerSpawnerController.SpawnTower();
     }
 }

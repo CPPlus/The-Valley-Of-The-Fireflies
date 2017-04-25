@@ -11,8 +11,7 @@ public class ProjectileController : ModelController<Projectile, ProjectileView>
 
     public void OnMonsterHit(MonsterView view)
     {
-        view.Controller.Model.GetShot(Model);
-        view.Controller.UpdateView();
+        view.OnShot(Model);
     }
 
     public override void UpdateView()

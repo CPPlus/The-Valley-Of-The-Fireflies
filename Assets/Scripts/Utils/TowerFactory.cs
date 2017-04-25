@@ -23,6 +23,12 @@ public class TowerFactory : MonoBehaviour
 
     public static TowerController CreateTower(TowerType type, Tower model, TowerSpawnerController spawnerController)
     {
+        GameObject dummy;
+        return CreateTower(type, model, spawnerController, out dummy);
+    }
+
+    public static TowerController CreateTower(TowerType type, Tower model, TowerSpawnerController spawnerController, out GameObject gameObject)
+    {
         GameObject towerInstance = null;
         GameObject prefab = null;
         switch (type)
@@ -39,8 +45,9 @@ public class TowerFactory : MonoBehaviour
         TowerView view = towerInstance.GetComponent<TowerView>();
         TowerController controller = new TowerController(model, view, spawnerController);
         view.Controller = controller;
-        controller.View = view;
         controller.UpdateView();
+
+        gameObject = towerInstance;
 
         return controller;
     }

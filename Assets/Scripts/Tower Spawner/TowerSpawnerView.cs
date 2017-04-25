@@ -8,10 +8,10 @@ public class TowerSpawnerView : View<TowerSpawnerController> {
     public bool TowerIsPlaceable {
         get
         {
-            return isOnPlaceableGround && 
-                !isColliding && 
-                Controller.HasGoldForTower &&
-                !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
+            return isOnPlaceableGround &&
+                !isColliding &&
+                Controller.HasGoldForTower; // &&
+                // !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
         }
     }
 
