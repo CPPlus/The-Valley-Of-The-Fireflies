@@ -4,26 +4,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class TowerSpawnerController : Controller<TowerSpawnerView> {
-
-    private TowerSelectorController towerSelectorController;
+public class TowerSpawnerController : ModelController<TowerSpawner, TowerSpawnerView> {
+    
     private TowerService towerService;
     private GoldManagerController goldManagerController;
 
     private List<TowerController> controllers = new List<TowerController>();
 
+    public bool IsInSpawnMode
+    {
+        get
+        {
+            return Model.IsInSpawnMode;
+        }
+        set
+        {
+            Model.IsInSpawnMode = value;
+            UpdateView();
+        }
+    }
+
     public bool HasGoldForTower
     {
         get
         {
-            return goldManagerController.CanSpend(towerSelectorController.SelectedTowerType);
+            return goldManagerController.CanSpend(Model.SelectedTowerType);
         }
     }
 
-    public TowerSpawnerController(TowerSpawnerView View, TowerSelectorController towerSelectorController, GoldManagerController goldManagerController) : base(View)
+    public TowerSpawnerController(
+        TowerSpawner model, 
+        TowerSpawnerView view, 
+        GoldManagerController goldManagerController) : base(model, view)
     {
-        this.towerSelectorController = towerSelectorController;
-        towerService = new TowerService(goldManagerController.Model, towerSelectorController.Model);
+        towerService = new TowerService(goldManagerController.Model, Model);
         this.goldManagerController = goldManagerController;
     }
 
@@ -34,12 +48,19 @@ public class TowerSpawnerController : Controller<TowerSpawnerView> {
             Tower tower = towerService.Buy();
             if (tower != null)
             {
-                TowerController controller = TowerFactory.CreateTower(towerSelectorController.SelectedTowerType, tower, this);
+                TowerController controller = TowerFactory.CreateTower(Model.SelectedTowerType, tower, this);
                 goldManagerController.UpdateView();
                 controllers.Add(controller);
-                View.IsInSpawnMode = false;
+                IsInSpawnMode = false;
             }
         }
+    }
+
+    public void SelectTower(TowerType towerType)
+    {
+        Model.SelectedTowerType = towerType;
+        IsInSpawnMode = true;
+        UpdateView();
     }
 
     public void ReloadAll()
@@ -62,8 +83,20 @@ public class TowerSpawnerController : Controller<TowerSpawnerView> {
         return reloadPrice;
     }
 
+    public void HideTowerUIs()
+    {
+        foreach (TowerController controller in controllers)
+            controller.View.ToggleUI(true);
+    }
+
     public override void UpdateView()
     {
-
+        View.UpdateState(
+            new TowerSpawnerViewModel
+            {
+                TowerType = Model.SelectedTowerType,
+                IsInSpawnMode = Model.IsInSpawnMode,
+                Range = (ElementalTowerDefenseModel.TowerFactory.CreateTower(Model.SelectedTowerType).Range.Points)
+            });
     }
 }

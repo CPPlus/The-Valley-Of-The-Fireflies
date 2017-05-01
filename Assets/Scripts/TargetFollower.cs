@@ -26,7 +26,7 @@ public class TargetFollower : MonoBehaviour {
 
     private Vector3 GetDirectionToTarget()
     {
-        Vector3 direction = Target.transform.position - transform.position;
+        Vector3 direction = Utils.GetMiddlePoint(Target) - transform.position;
         direction.Normalize();
         return direction;
     }

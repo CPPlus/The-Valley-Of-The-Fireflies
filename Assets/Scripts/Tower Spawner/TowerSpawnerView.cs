@@ -1,17 +1,18 @@
-﻿using System.Collections;
+﻿using ElementalTowerDefenseModel;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(TowerSelectorView))]
-public class TowerSpawnerView : View<TowerSpawnerController> {
+public class TowerSpawnerView : ModelView<TowerSpawnerController> {
 
     public bool TowerIsPlaceable {
         get
         {
             return isOnPlaceableGround &&
                 !isColliding &&
-                Controller.HasGoldForTower; // &&
-                // !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
+                Controller.HasGoldForTower &&
+                IsInSpawnMode; // &&
+                // UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
         }
     }
 
@@ -32,17 +33,21 @@ public class TowerSpawnerView : View<TowerSpawnerController> {
     private bool isOnPlaceableGround = false;
 
     private Cooldown collisionCooldown;
-    private TowerSelectorView towerSelectorView;
 
     private new BoxCollider collider;
     private Vector3 initialColliderSize;
 
+    public TowerSpawnerView spawnerView;
+    private GameObject towerProjection;
+    public GameObject shootingRangeSphere;
+
     void Start () {
         collisionCooldown = new Cooldown(0.1f);
-        towerSelectorView = GetComponent<TowerSelectorView>();
 	}
     
 	void Update () {
+        towerProjection.transform.position = transform.position;
+
         collisionCooldown.Update(Time.deltaTime);
         if (collisionCooldown.IsOver) isColliding = false;
         else isColliding = true;
@@ -50,6 +55,34 @@ public class TowerSpawnerView : View<TowerSpawnerController> {
         RaycastForProjectionState();
         VisualizePlaceability();
 	}
+
+    public void SetProjectionVisibility(bool isVisible)
+    {
+        towerProjection.SetActive(isVisible);
+        shootingRangeSphere.SetActive(isVisible);
+    }
+
+    public void UpdateState(TowerSpawnerViewModel data)
+    {
+        if (towerProjection != null) Destroy(towerProjection);
+        Tower model = ElementalTowerDefenseModel.TowerFactory.CreateTower(data.TowerType);
+        TowerController controller
+            = TowerFactory.CreateTower(
+                data.TowerType,
+                model,
+                null,
+                out towerProjection);
+        towerProjection.GetComponent<Rigidbody>().detectCollisions = false;
+        towerProjection.GetComponent<TowerView>().enabled = false;
+        towerProjection.transform.parent = gameObject.transform;
+        transform.GetChild(0).transform.localScale = new Vector3(
+            model.Range.Points * 2,
+            model.Range.Points * 2,
+            model.Range.Points * 2);
+        spawnerView.IsInSpawnMode = data.IsInSpawnMode;
+
+        if (!IsInSpawnMode) SetProjectionVisibility(false);
+    }
 
     private void OnCollisionStay(Collision collision)
     {
@@ -63,7 +96,7 @@ public class TowerSpawnerView : View<TowerSpawnerController> {
     {
         if (!IsInSpawnMode)
         {
-            towerSelectorView.SetProjectionVisibility(false);
+            SetProjectionVisibility(false);
             return;
         }
 
@@ -78,10 +111,10 @@ public class TowerSpawnerView : View<TowerSpawnerController> {
 
             if (hit.collider.gameObject.tag == placeableTag) isOnPlaceableGround = true;
             else if (hit.collider.gameObject.tag == notPlaceableTag) isOnPlaceableGround = false;
-            else if (hit.collider.gameObject.tag == collisionObstacleTag) towerSelectorView.SetProjectionVisibility(false);
+            else if (hit.collider.gameObject.tag == collisionObstacleTag) SetProjectionVisibility(false);
         } else
         {
-            towerSelectorView.SetProjectionVisibility(false);
+            SetProjectionVisibility(false);
         }
     }
 
@@ -107,12 +140,12 @@ public class TowerSpawnerView : View<TowerSpawnerController> {
 
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
-            towerSelectorView.SetProjectionVisibility(false);
+            SetProjectionVisibility(false);
             collider.size = new Vector3();
         }
         else
         {
-            towerSelectorView.SetProjectionVisibility(true);
+            SetProjectionVisibility(true);
             collider.size = initialColliderSize;
         }  
     }

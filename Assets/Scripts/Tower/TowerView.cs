@@ -7,8 +7,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(PrefabAttacher))]
 [RequireComponent(typeof(ObjectDisabler))]
 public class TowerView : ModelView<TowerController> {
-
-    private static List<TowerView> views = new List<TowerView>();
+    
     private PrefabAttacher attacher;
     private ObjectDisabler disabler;
     private ScaleRelativeToCamera scaleRelativeToCamera;
@@ -18,13 +17,14 @@ public class TowerView : ModelView<TowerController> {
     private int lastAmmoPercentageShown = int.MaxValue;
     private int nextMilestone = INITIAL_MILESTONE;
 
+    private bool uiIsShown = false;
+
     public Bar ammoBar;
     public Button reloadButton;
     public Button sellButton;
 
     void Start()
     {
-        views.Add(this);
         FlyingTextSpawner.SpawnGoldSpent((new RegularPriceList()).GetPrice(Controller.Model.Type), gameObject);
     }
 
@@ -35,19 +35,14 @@ public class TowerView : ModelView<TowerController> {
 
     public void OnMouseDown()
     {
-        ToggleUI();
-    }
-
-    private void FocusUISelfOnly()
-    {
-        foreach (TowerView view in views)
-            if (view != this) view.FocusUI(false);
-
-        FocusUI(true);
+        Controller.HideTowerUIs();
+        ToggleUI(uiIsShown = !uiIsShown);
     }
 
     public void Shoot(MonsterView monster, ProjectileController controller) 
     {
+        Vector3 pos = controller.View.transform.position;
+        controller.View.transform.position = Utils.GetTopPoint(gameObject, -0.5f);
         TargetFollower follower = controller.View.GetComponent<TargetFollower>();
         follower.Target = monster.gameObject;
     }
@@ -56,7 +51,6 @@ public class TowerView : ModelView<TowerController> {
     {
         if (viewModel.IsSold)
         {
-            views.Remove(this);
             FlyingTextSpawner.SpawnGoldEarned(viewModel.SellPrice, gameObject);
             Destroy(gameObject);
             return;
@@ -130,22 +124,19 @@ public class TowerView : ModelView<TowerController> {
         Controller.OnSell();
     }
 
-    private void ToggleUI()
+    public void ToggleUI(bool on)
     {
-        if (disabler.IsEnabled)
+        if (on)
         {
             disabler.Disable();
             FocusUI(false);
         }
         else
         {
-            // Show only one tower UI at a time.
-            foreach (TowerView view in views)
-                view.disabler.Disable();
-
             disabler.Enable();
-            FocusUISelfOnly();
+            FocusUI(true);
         }
+        uiIsShown = on;
     }
 
     private void FocusUI(bool shouldFocus)

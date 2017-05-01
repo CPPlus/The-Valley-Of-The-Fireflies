@@ -55,6 +55,11 @@ public class TowerController : ModelController<Tower, TowerView> {
         UpdateView();
     }
 
+    public void HideTowerUIs()
+    {
+        spawnerController.HideTowerUIs();
+    }
+
     public void StartShootingAtMonster(MonsterView[] monsters)
     {
         List<MonsterController> controllers = new List<MonsterController>();
